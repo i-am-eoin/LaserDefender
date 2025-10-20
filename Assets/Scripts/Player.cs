@@ -32,6 +32,8 @@ public class Player : MonoBehaviour
         var newXPos = Mathf.Clamp(transform.position.x + deltaX, xMin, xMax);
         var deltaY = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
         var newYPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
+
+        Camera.main.transform.position = new Vector3(newXPos, newYPos, Camera.main.transform.position.z);
         transform.position = new Vector2(newXPos, newYPos);
     }
 }
