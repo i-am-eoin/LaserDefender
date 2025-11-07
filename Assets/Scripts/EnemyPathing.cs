@@ -1,15 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class EnemyScript : MonoBehaviour
+public class EnemyPathing : MonoBehaviour
 {
-    [SerializeField] List<Transform> waypoints;
-    [SerializeField] float moveSpeed = 2f;
+    [SerializeField] WaveConfig waveConfig;
     int waypointIndex = 0;
 
     void Start()
     {
-        transform.position = waypoints[waypointIndex].transform.position;
+        transform.position = waveConfig.GetWaypoints()[waypointIndex].transform.position;
+
     }
     void Update()
     {
@@ -18,12 +18,12 @@ public class EnemyScript : MonoBehaviour
     
     void EnemyMove()
     {
-        if (waypointIndex <= waypoints.Count)
+        if (waypointIndex < waveConfig.GetWaypoints().Count)
         {
-        var targetPosition = waypoints[waypointIndex].transform.position;        
+        var targetPosition = waveConfig.GetWaypoints()[waypointIndex].transform.position;        
         targetPosition.z = 0f;
         
-        var movementThisFrame = moveSpeed * Time.deltaTime;
+        var movementThisFrame = waveConfig.GetEnemyMoveSpeed() * Time.deltaTime;
         transform.position = Vector2.MoveTowards(transform.position, targetPosition, movementThisFrame);
 
         if (transform.position == targetPosition)
@@ -33,5 +33,9 @@ public class EnemyScript : MonoBehaviour
         } else {
             Destroy(gameObject);
         }
+    }
+    public void SetWaveConfig(WaveConfig waveConfig)
+    {
+        this.waveConfig = waveConfig;
     }
 }
