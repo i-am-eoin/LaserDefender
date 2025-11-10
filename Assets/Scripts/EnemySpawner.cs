@@ -5,12 +5,20 @@ using System.Collections.Generic;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] List<WaveConfig> waveConfigs;
-    int startingWave = 0;
+    int startingWave = 0;    
+    [SerializeField] bool looping = false;
 
-    void Start()
+
+    IEnumerator Start()
     {
-        var currentWave = waveConfigs[startingWave];
-        StartCoroutine(SpawnAllEnemiesInWave(currentWave));
+        do {
+            yield return StartCoroutine(SpawnAllWaves());
+        } while (looping);
+    }
+
+    void Update()
+    {
+        
     }
 
     IEnumerator SpawnAllEnemiesInWave(WaveConfig waveConfig)
@@ -26,9 +34,13 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-
-    void Update()
+    IEnumerator SpawnAllWaves()
     {
-        
+        for (int i=startingWave;i<waveConfigs.Count;i++)
+        {
+            var currentWave = waveConfigs[i];
+            yield return StartCoroutine(SpawnAllEnemiesInWave(currentWave));
+        }
     }
+
 }
