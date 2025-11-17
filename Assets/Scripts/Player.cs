@@ -6,11 +6,9 @@ public class Player : MonoBehaviour
     [SerializeField] float moveSpeed = 6.0f;
     [SerializeField] float padding = 0.5f;
     [SerializeField] GameObject laserPrefab;
-
     [SerializeField] float projectileSpeed = 20.0f;
-    
     [SerializeField] float projectileFiringTime = 0.2f;
-
+    [SerializeField] int playerHealth = 100;
 
     float xMin, xMax, yMin, yMax;
     
@@ -51,28 +49,38 @@ public class Player : MonoBehaviour
 
     private void Fire()
     {
-        if (Input.GetButtonDown("Fire1"))
-        {
+        if (Input.GetButtonDown("Fire1")) {
            StartCoroutine(fireCoroutine);
         }
-        if (Input.GetButtonUp("Fire1"))
-        {
+        if (Input.GetButtonUp("Fire1")) {
            StopCoroutine(fireCoroutine);
         }
     }
     
-IEnumerator FireContinuously()
-   {
-    while (true)
-      {
+    IEnumerator FireContinuously()
+    {
+        while (true) {
             GameObject laser = Instantiate(laserPrefab, transform.position, Quaternion.identity);
           
            laser.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(0, projectileSpeed);
 
            yield return new WaitForSeconds(projectileFiringTime);
-      }
-
-   }
-
-
+        }
+    }
+    private void ProcessHit(DamageDealer damageDealer)
+    {
+        playerHealth -= damageDealer.GetDamage();
+        damageDealer.Hit();    
+        if (playerHealth <= 0) {
+            Destroy(gameObject);
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        DamageDealer damageDealer = other.gameObject.GetComponent<DamageDealer>();
+        if(!damageDealer) {
+            return;
+        }
+        ProcessHit(damageDealer);
+    }
 }

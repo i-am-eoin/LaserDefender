@@ -22,24 +22,28 @@ public class Enemy : MonoBehaviour
     private void CountDownAndShoot()
     {
         shotCounter -= Time.deltaTime;
-        if (shotCounter <= 0f)
-        {
+        if (shotCounter <= 0f) {
             EnemyFire();    
             shotCounter = Random.Range(minTimeBetweenShots, maxTimeBetweenShots);
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D otherObject)
-    {   
-        DamageDealer damageDealer = otherObject.gameObject.GetComponent<DamageDealer>();
+    
+private void OnTriggerEnter2D(Collider2D other)
+    {
+        DamageDealer damageDealer = other.gameObject.GetComponent<DamageDealer>();
+        if(!damageDealer) {
+            return;
+        }
+
         ProcessHit(damageDealer);
     }
+
 
     private void ProcessHit(DamageDealer damageDealer)
     {
         health -= damageDealer.GetDamage();
-        if (health <= 0)
-        {
+        if (health <= 0) {
             Destroy(gameObject);
         }
 

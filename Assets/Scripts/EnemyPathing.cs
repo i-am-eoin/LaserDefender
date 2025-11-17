@@ -18,8 +18,7 @@ public class EnemyPathing : MonoBehaviour
     
     void EnemyMove()
     {
-        if (waypointIndex < waveConfig.GetWaypoints().Count)
-        {
+        if (waypointIndex < waveConfig.GetWaypoints().Count) {
         var targetPosition = waveConfig.GetWaypoints()[waypointIndex].transform.position;        
         targetPosition.z = 0f;
         
